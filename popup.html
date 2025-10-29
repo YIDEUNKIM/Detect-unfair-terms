@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 약관 분석 결과</h1>
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>약관을 분석하고 있습니다...</p>
+      <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">잠시만 기다려주세요</p>
+    </div>
+
+    <div id="no-data" class="no-data" style="display: none;">
+      <div class="icon">⚠️</div>
+      <p>이 페이지에서 약관을 찾을 수 없습니다.</p>
+      <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">약관이 있는 페이지에서 다시 시도해주세요.</p>
+    </div>
+
+    <div id="result" style="display: none;">
+      <!-- 기본 정보 -->
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="card-icon">🌐</div>
+          <div class="card-content">
+            <div class="card-label">URL</div>
+            <div class="card-value" id="url"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-icon">📄</div>
+          <div class="card-content">
+            <div class="card-label">발견된 약관</div>
+            <div class="card-value" id="terms-count"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-icon">🕐</div>
+          <div class="card-content">
+            <div class="card-label">분석 시간</div>
+            <div class="card-value" id="timestamp"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 체크박스별 약관 분석 (새 형식) -->
+      <div id="structured-analysis" class="structured-analysis" style="display: none;">
+        <h2>📋 약관 체크 가이드</h2>
+        <div id="terms-checklist"></div>
+      </div>
+
+      <!-- 기존 텍스트 분석 (호환성) -->
+      <div id="text-analysis" class="analysis-section">
+        <h2>📋 분석 내용</h2>
+        <div class="analysis-content" id="analysis"></div>
+      </div>
+
+      <div class="button-group">
+        <button id="view-raw" class="button primary">
+          <span class="button-icon">📖</span>
+          원문 보기
+        </button>
+        <button id="re-analyze" class="button secondary">
+          <span class="button-icon">🔄</span>
+          다시 분석
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

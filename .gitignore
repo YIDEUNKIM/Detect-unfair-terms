@@ -1,0 +1,39 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node modules (if used in future)
+node_modules/
+
+# Test files
+test-*.html
+test-*.js
+*-test.html
+*-test.js
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Python
+*.pyc
+__pycache__/
+*.py
+
+# API Keys (보안) - 절대 커밋하지 말 것!
+config.js
+*_key.js
+api-key.txt
+.env
+*.key
