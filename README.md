@@ -92,12 +92,23 @@ cd detect-unfair-terms
 ```
 
 ### 2. Gemini API 키 설정
+
+⚠️ **중요: API 키는 절대 Git에 커밋하지 마세요!**
+
+**방법 1: config.js 사용 (권장)**
+```bash
+# config.example.js를 복사
+cp config.example.js config.js
+
+# config.js 파일을 열고 실제 API 키 입력
+# const GEMINI_API_KEY = 'YOUR_API_KEY_HERE';
+```
+
+**방법 2: background.js 직접 수정**
 1. [Google AI Studio](https://aistudio.google.com/app/apikey)에서 API 키 발급
 2. `background.js` 파일 열기
-3. 1번 줄의 `GEMINI_API_KEY` 값을 발급받은 키로 변경:
-```javascript
-const GEMINI_API_KEY = 'YOUR_API_KEY_HERE';
-```
+3. 1번 줄의 `GEMINI_API_KEY` 값을 발급받은 키로 변경
+   - ⚠️ 이 방법 사용 시 절대 Git에 커밋하지 말 것!
 
 ### 3. Chrome에 익스텐션 로드
 1. Chrome 주소창에 `chrome://extensions/` 입력
