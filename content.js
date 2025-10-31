@@ -297,82 +297,100 @@ function hasTermsKeywords(text) {
 
 // ===== 4단계: 최적화된 점수 계산 =====
 
+// ===== 4단계: [개선된] 최적화된 점수 계산 =====
+
 function calculateTermsScore(element, text) {
   let score = 0;
   const lowerText = text.toLowerCase();
-
-  // 1. 텍스트 길이 점수 (최대 25점)
   const length = text.length;
-  if (length > 500) score += 15;
+
+  // 1. 텍스트 길이 점수 (최대 20점) - (가중치 소폭 조정)
+  if (length > 500) score += 10;
   if (length > 1000) score += 5;
   if (length > 2000) score += 5;
 
-  // 2. 키워드 점수 (최대 40점) - 최적화된 버전
+  // 2. 키워드 점수 (최대 35점) - (가중치 소폭 조정)
   const highValueKeywords = [
     '개인정보', '수집', '이용약관', '서비스 이용', '동의', '제3자 제공',
     'privacy policy', 'terms of service', 'terms and conditions',
     'agreement', 'consent', 'personal information'
   ];
-
   const mediumValueKeywords = [
     '제공', '목적', '이용자', '회원', '정보', '처리', '마케팅',
     'user', 'personal', 'data', 'collect', 'process'
   ];
 
   let highMatches = 0, mediumMatches = 0;
-
   highValueKeywords.forEach(keyword => {
-    if (lowerText.includes(keyword.toLowerCase())) {
-      highMatches++;
-    }
+    if (lowerText.includes(keyword.toLowerCase())) highMatches++;
   });
-
   mediumValueKeywords.forEach(keyword => {
-    if (lowerText.includes(keyword.toLowerCase())) {
-      mediumMatches++;
-    }
+    if (lowerText.includes(keyword.toLowerCase())) mediumMatches++;
   });
 
-  score += Math.min(highMatches * 8, 25);
+  score += Math.min(highMatches * 8, 20); // 캡 조정
   score += Math.min(mediumMatches * 2, 10);
 
-  // 법률 구조 (제○조)
-  if (/제\d+조|제 \d+ 조|article \d+/i.test(text)) {
-    score += 5;
+  // 법률 구조 (제○조) - (가중치 상향 5점 -> 10점)
+  if (/제\d+조|제 \d+ 조|article \d+|§ ?\d+/i.test(text)) {
+    score += 10;
   }
 
-  // 3. 구조적 특징 점수 (최대 25점)
+  // 3. 구조적 특징 점수 (최대 25점) - (기존 유지)
   try {
     const styles = window.getComputedStyle(element);
-
-    // 스크롤 가능한 박스
     const overflow = styles.overflow || styles.overflowY;
     if (overflow === 'auto' || overflow === 'scroll') {
       score += 10;
     }
-
-    // 높이가 큰 요소
     if (element.scrollHeight > element.offsetHeight * 1.2) {
       score += 8;
     }
-
-    // 테두리
     if (parseFloat(styles.borderWidth) > 0) {
       score += 5;
     }
-  } catch (e) {
-    // 무시
-  }
+  } catch (e) { /* 무시 */ }
 
-  // 4. 위치적 특징 (최대 10점)
-  // 체크박스 근처
+  // 4. 위치적 특징 (최대 10점) - (기존 유지)
   const nearbyCheckbox = element.querySelector('input[type="checkbox"]') ||
                          element.parentElement?.querySelector('input[type="checkbox"]');
   if (nearbyCheckbox) {
     score += 10;
   }
 
-  return Math.min(score, 100);
+  // ===== 🌟 신규 추가 휴리스틱 🌟 =====
+
+  // 5. [신규] 텍스트 밀도 (Text-to-Tag Ratio) (최대 15점)
+  // 순수 텍스트가 HTML 태그보다 많을수록 약관일 확률 높음
+  const htmlLength = element.innerHTML.length + 1; // 0으로 나누기 방지
+  const textToHtmlRatio = length / htmlLength;
+  
+  if (textToHtmlRatio > 0.7) { // 70% 이상이 순수 텍스트
+    score += 15;
+  } else if (textToHtmlRatio > 0.5) { // 50% 이상
+    score += 5;
+  }
+
+  // 6. [신규] 상호작용 요소 페널티 (최대 -25점)
+  // 약관 텍스트 블록에는 버튼, 입력창, 이미지가 거의 없음
+  // (단, 체크박스와 링크는 예외)
+  const interactiveTags = element.querySelectorAll(
+    'button, input:not([type="checkbox"]), textarea, select, img, video, iframe, canvas'
+  );
+  const linkTags = element.querySelectorAll('a');
+
+  // 링크는 10개, 그 외 상호작용 요소는 2개까지 허용 (초과 시 감점)
+  if (interactiveTags.length > 2) {
+    score -= 15;
+  }
+  if (linkTags.length > 10 && interactiveTags.length === 0) {
+    // 링크만 많은 경우 (푸터 메뉴, 사이트맵 등)
+    score -= 10;
+  }
+  
+  // ------------------------------------
+
+  return Math.max(0, Math.min(score, 100)); // 점수가 0 미만 방지
 }
 
 // 약관 특징 분석
