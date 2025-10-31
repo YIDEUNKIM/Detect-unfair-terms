@@ -232,7 +232,7 @@ function fallbackScan(progressCallback) {
   if (progressCallback) progressCallback(35, '전체 페이지 스캔 중...');
 
   // 약관이 있을 가능성이 높은 요소만 스캔
-  const limitedElements = document.querySelectorAll('section, article, div[class], div[id], dialog');
+  const limitedElements = document.querySelectorAll('section, article, div, main, dialog');
 
   // 최대 100개만 체크 (성능 제한)
   const maxCheck = Math.min(limitedElements.length, 100);
