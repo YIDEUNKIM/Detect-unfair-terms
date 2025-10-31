@@ -358,7 +358,7 @@ function calculateTermsScore(element, text) {
     score += 10;
   }
 
-  // ===== 🌟 신규 추가 휴리스틱 🌟 =====
+  // =====  신규 추가 휴리스틱  =====
 
   // 5. [신규] 텍스트 밀도 (Text-to-Tag Ratio) (최대 15점)
   // 순수 텍스트가 HTML 태그보다 많을수록 약관일 확률 높음
