@@ -235,7 +235,7 @@ function fallbackScan(progressCallback) {
   const limitedElements = document.querySelectorAll('section, article, div, main, dialog');
 
   // 최대 100개만 체크 (성능 제한)
-  const maxCheck = Math.min(limitedElements.length, 100);
+  const maxCheck = Math.min(limitedElements.length, 250);
 
   for (let i = 0; i < maxCheck; i++) {
     const el = limitedElements[i];
